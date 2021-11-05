@@ -18,6 +18,11 @@ public class Seller implements Serializable{
 	
 	//ligacão Department -> seller (um para um)
 	private Department department;
+	
+
+	public Seller() {
+		
+	}
 
 	public Seller(Integer id, String name, String email, Date bithDate, Double baseSalary, Department department) {
 		this.id = id;

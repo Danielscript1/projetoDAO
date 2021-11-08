@@ -14,28 +14,25 @@ public class Program {
 	public static void main(String[] args)  {
 		Scanner sc = new Scanner(System.in);
 		//instancia meu obj dao
+		
 		SellerDao sellerDao = DaoFactory.createSellerDao();
-		System.out.println("digite o id ");
+		System.out.println("digite o id -> findById ");
 		int id = sc.nextInt();
 		Seller seller = sellerDao.findById(id);
 		
 		System.out.println(seller);
-		//insert de dados
-		/*
-		 * this.id = id;
-		this.name = name;
-		this.email = email;
-		this.bithDate = bithDate;
-		this.baseSalary = baseSalary;
-		this.department = department;
-		 * */
-//		for(Seller obj : list) {
-//			System.out.println(obj);
-//		}
-//		
-//		System.out.println("inderindo dados: ");
-//		Department department = null;
-//		Seller newSeller = new Seller(null, "Greg", "greg@gmail.com", new Date(), 4000.0, department);
+		//testando por departamento
+		System.out.println("teste 2: -> find ByDepartment");
+		
+		System.out.println("informe o numero do departamento: ");
+		int numberDep = sc.nextInt();
+		Department dep = new Department(numberDep,null);
+		List<Seller> list = sellerDao.findByDepartment(dep);
+		for(Seller dep1 : list) {
+			System.out.println("setor: "+dep1);
+		}
+		
+		
 		
 		
 		

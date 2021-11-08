@@ -6,8 +6,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import db.DB;
 import db.DbException;
@@ -157,11 +160,54 @@ public class SellerDaoJDBC implements SellerDao {
 		
 		return null;
 	}
-
+	//criando um a lista de departmaneto -> passando um departamento com argumento
 	@Override
 	public List<Seller> findByDepartment(Department department) {
-		// TODO Auto-generated method stub
-		return null;
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		try {
+			st = conn.prepareStatement(
+					"SELECT seller.*,department.Name as DepName "
+					+ "FROM seller INNER JOIN department "
+					+ "ON seller.DepartmentId = department.Id "
+					+ "WHERE DepartmentId = ? "
+					+ "ORDER BY Name");
+
+			st.setInt(1, department.getId());
+			rs = st.executeQuery();
+			//criando uma lista ->para retornar
+			List <Seller> list = new ArrayList<>();
+			//verificando a repetição
+			Map<Integer, Department> map = new HashMap<>();
+			
+			while (rs.next()) {
+				Department dep = map.get(rs.getInt("DepartmentId"));
+				if(dep == null) {
+			    dep = instantiateDepartment(rs);
+			    map.put(rs.getInt("DepartmentId"), dep);
+				
+				}
+				Seller obj = instantiateSeller(rs,dep);
+				list.add(obj);
+		}
+			return list;
+		
+		
+		
+	}catch(SQLException e) {
+		try {
+			conn.rollback();
+			throw new DbException("Erro de transação! não concluida");
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+	}finally {
+		DB.closeStatement(st);//fechando minha conexão de comando sql
+		DB.closeResultSet(rs);// fecha minha conexao de query
+		
+		
 	}
-	
+	return null;
+		
 }
+	}

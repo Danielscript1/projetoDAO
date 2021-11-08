@@ -49,6 +49,14 @@ public class Program {
 		 sellerDao.insert(neWseller);
 		 System.out.println("inserido"+neWseller.getId());
 		
+		 //--atualizando dados
+		 
+		 System.out.println("\n=== TEST 5: seller update =====");
+			seller = sellerDao.findById(1);
+			seller.setName("daniel");
+			sellerDao.update(seller);
+			System.out.println("Update completed");
+		 
 		
 	}
 }

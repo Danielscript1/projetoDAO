@@ -41,6 +41,13 @@ public class Program {
 			System.out.println("setor: "+obj);
 		}
 		
+	//----insert os elementos
+		
+		System.out.println("teste 4: -> insert");
+		
+		 Seller neWseller = new Seller(null,"israel","samuel@com",new Date(),4000.0,dep);
+		 sellerDao.insert(neWseller);
+		 System.out.println("inserido"+neWseller.getId());
 		
 		
 	}

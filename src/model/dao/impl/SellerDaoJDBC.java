@@ -31,33 +31,21 @@ public class SellerDaoJDBC implements SellerDao {
 	
 	@Override
 	public void insert(Seller obj) {
-		
 		PreparedStatement st = null;
-		
-	try{
-			
-		
-			//conn = DB.getConnection();//instabelecendo a conexão
-			conn.setAutoCommit(false);//todos confirmações vão ficar pedentes de uma confimação
-			//query execuçaõ de consultar
-			
+		try {
 			st = conn.prepareStatement(
 					"INSERT INTO seller "
 					+ "(Name, Email, BirthDate, BaseSalary, DepartmentId) "
 					+ "VALUES "
 					+ "(?, ?, ?, ?, ?)",
 					Statement.RETURN_GENERATED_KEYS);
-			
-			
-			conn.commit();//confirmação do commit
-			//inserindo os dados
-			st.setString(1,obj.getName());
+
+			st.setString(1, obj.getName());
 			st.setString(2, obj.getEmail());
 			st.setDate(3, new java.sql.Date(obj.getBithDate().getTime()));
 			st.setDouble(4, obj.getBaseSalary());
-			st.setInt(5,obj.getDepartment().getId());
-			
-			
+			st.setInt(5, obj.getDepartment().getId());
+
 			int rowsAffected = st.executeUpdate();
 
 			if (rowsAffected > 0) {
@@ -71,20 +59,12 @@ public class SellerDaoJDBC implements SellerDao {
 			else {
 				throw new DbException("Unexpected error! No rows affected!");
 			}
-			
-			
-			
-		}catch(SQLException e) {
-			try {
-				conn.rollback();
-				throw new DbException("Erro de transação! não concluida");
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			}
-		}finally {
-			DB.closeStatement(st);//fechando minha conexão de comando sql
-			
-			
+		}
+		catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		}
+		finally {
+			DB.closeStatement(st);
 		}
 	}
 

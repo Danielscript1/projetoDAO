@@ -57,6 +57,11 @@ public class Program {
 			sellerDao.update(seller);
 			System.out.println("Update completed");
 		 
-		
+			 //--deletando dados
+			 
+			 System.out.println("\n=== TEST 5: seller deletando =====");
+				sellerDao.delete(1);
+				
+			 
 	}
 }

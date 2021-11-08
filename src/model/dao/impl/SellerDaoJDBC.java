@@ -97,7 +97,33 @@ public class SellerDaoJDBC implements SellerDao {
 
 	@Override
 	public void delete(Integer id) {
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		try {
+			st = conn.prepareStatement(
+					"DELETE FROM seller "
+					+ "WHERE Id = ?");
+
+			st.setInt(1, id);
+			st.executeUpdate();//EXECUTAR O COMANDO
+			 }
+			 catch(SQLException e) {
+					try {
+						conn.rollback();
+						throw new DbException("Erro de transação! não concluida");
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					}
+				}finally {
+					DB.closeStatement(st);//fechando minha conexão de comando sql
+					DB.closeResultSet(rs);// fecha minha conexao de query
+					
+					
+				}
+			
+			
 		
+	
 		
 	}
 

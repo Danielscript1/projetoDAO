@@ -28,11 +28,18 @@ public class Program {
 		int numberDep = sc.nextInt();
 		Department dep = new Department(numberDep,null);
 		List<Seller> list = sellerDao.findByDepartment(dep);
-		for(Seller dep1 : list) {
-			System.out.println("setor: "+dep1);
+		for(Seller obj : list) {
+			System.out.println("setor: "+obj);
 		}
+		//----buscando todos os elementos
 		
+		System.out.println("teste 3: -> findAll");
 		
+		Department dep1 = new Department(numberDep,null);
+		 list = sellerDao.findAll();
+		for(Seller obj : list) {
+			System.out.println("setor: "+obj);
+		}
 		
 		
 		

@@ -157,9 +157,56 @@ public class SellerDaoJDBC implements SellerDao {
 
 	@Override
 	public List<Seller> findAll() {
-		
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		try {
+			st = conn.prepareStatement(
+					"SELECT seller.*,department.Name as DepName "
+					+ "FROM seller INNER JOIN department "
+					+ "ON seller.DepartmentId = department.Id "
+					+ "ORDER BY Name");
+
+			
+			rs = st.executeQuery();
+			//criando uma lista ->para retornar
+			List <Seller> list = new ArrayList<>();
+			//verificando a repetição
+			Map<Integer, Department> map = new HashMap<>();
+			
+			while (rs.next()) {
+				Department dep = map.get(rs.getInt("DepartmentId"));
+				if(dep == null) {
+			    dep = instantiateDepartment(rs);
+			    map.put(rs.getInt("DepartmentId"), dep);
+				
+				}
+				Seller obj = instantiateSeller(rs,dep);
+				list.add(obj);
+		}
+			return list;
+			
+		}catch(SQLException e) {
+			try {
+				conn.rollback();
+				throw new DbException("Erro de transação! não concluida");
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		}finally {
+			DB.closeStatement(st);//fechando minha conexão de comando sql
+			DB.closeResultSet(rs);// fecha minha conexao de query
+			
+			
+		}
 		return null;
+			
+		
+		
+		
+		
 	}
+	
+	
 	//criando um a lista de departmaneto -> passando um departamento com argumento
 	@Override
 	public List<Seller> findByDepartment(Department department) {

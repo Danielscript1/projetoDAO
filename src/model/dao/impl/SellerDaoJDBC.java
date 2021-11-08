@@ -29,7 +29,9 @@ public class SellerDaoJDBC implements SellerDao {
 	public void insert(Seller obj) {
 		
 		
-		try {
+		
+			/*
+			 * try{
 			//conn = DB.getConnection();//instabelecendo a conexão
 			conn.setAutoCommit(false);//todos confirmaçõs vão ficar pedentes de uma confimação
 			//query execuçaõ de consultar
@@ -56,7 +58,7 @@ public class SellerDaoJDBC implements SellerDao {
 			DB.closeStatement(st);//fechando minha conexão de comando sql
 			
 			
-		}
+		}*/
 	}
 
 	@Override
@@ -73,35 +75,31 @@ public class SellerDaoJDBC implements SellerDao {
 
 	@Override
 	public Seller findById(Integer id) {
+		PreparedStatement st = null;
+		ResultSet rs = null;
 		try {
-			//conn = DB.getConnection();//instabelecendo a conexão
-			conn.setAutoCommit(false);//todos confirmações vão ficar pedentes de uma confimação
-			//query execuçaõ de consultar
-			
-			st = conn.prepareStatement("SELECT seller.*,department.Name as DepName"
-					+ "FROM seller INNER JOIN department"
-					+ "ON seller.DepartmentId = department.Id"
+			st = conn.prepareStatement(
+					"SELECT seller.*,department.Name as DepName "
+					+ "FROM seller INNER JOIN department "
+					+ "ON seller.DepartmentId = department.Id "
 					+ "WHERE seller.Id = ?");
-					
-			conn.commit();//confirmação do commit
-			//recuperando
-			//st.setInt(1, rs.getInt(id));
+
 			st.setInt(1, id);
 			rs = st.executeQuery();
-			
-			if(rs.next()) {
+			if (rs.next()) {
 				Department dep = new Department();
 				dep.setId(rs.getInt("DepartmentId"));
 				dep.setName(rs.getString("DepName"));
 				Seller obj = new Seller();
 				obj.setId(rs.getInt("Id"));
-				
-				
+				obj.setName(rs.getString("Name"));
+				obj.setEmail(rs.getString("Email"));
+				obj.setBaseSalary(rs.getDouble("BaseSalary"));
+				obj.setBithDate(rs.getDate("BirthDate"));
+				obj.setDepartment(dep);
+				return obj;
 			}
-
-			
-			
-			
+			return null;
 		}catch(SQLException e) {
 			try {
 				conn.rollback();
@@ -111,6 +109,7 @@ public class SellerDaoJDBC implements SellerDao {
 			}
 		}finally {
 			DB.closeStatement(st);//fechando minha conexão de comando sql
+			DB.closeResultSet(rs);// fecha minha conexao de query
 			
 			
 		}
